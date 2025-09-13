@@ -1,14 +1,24 @@
 {
     "name": "configManager_csharp",
     "image": "shukriadams/dotnet6build:0.0.1",
-    "extensions": [
-        "ms-dotnettools.csdevkit"
-    ],
-    "settings": {
-        "editor.codeLens": false,
-        "editor.autoClosingBrackets": "never",
-        "editor.autoIndent": "brackets",
-        "files.exclude": {
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csdevkit"
+            ],
+            "settings": {
+                "editor.codeLens": false,
+                "editor.autoClosingBrackets": "never",
+                "editor.autoIndent": "brackets",
+                "workbench.colorTheme": "Default Dark Modern",
+                "terminal.integrated.sendKeybindingsToShell": true,
+                "github.copilot.chat.codeGeneration.instructions": [
+                    {
+                        "text": "go home AI you drunk"
+                    }
+                ]
+            }
+            
         }
     }
 }
