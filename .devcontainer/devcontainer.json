@@ -1,0 +1,14 @@
+{
+    "name": "configManager_csharp",
+    "image": "shukriadams/dotnet6build:0.0.1",
+    "extensions": [
+        "ms-dotnettools.csdevkit"
+    ],
+    "settings": {
+        "editor.codeLens": false,
+        "editor.autoClosingBrackets": "never",
+        "editor.autoIndent": "brackets",
+        "files.exclude": {
+        }
+    }
+}
