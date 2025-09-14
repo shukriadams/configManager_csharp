@@ -1,6 +1,6 @@
 {
     "name": "configManager_csharp",
-    "image": "shukriadams/dotnet6build:0.0.1",
+    "image": "shukriadams/dotnet6build:0.0.2",
     "customizations": {
         "vscode": {
             "extensions": [
