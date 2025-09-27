@@ -40,7 +40,7 @@ public class Store<T>
     #region METHODS
 
     /// <summary>
-    /// Returns true if 
+    /// Returns true if setup is valid
     /// </summary>
     /// <returns></returns>
     public string ValidateSetup()
@@ -51,23 +51,35 @@ public class Store<T>
         return _configProvider.ValidateSetup();
     }
 
+    /// <summary>
+    /// Returns true if setup can be used to round trip against store.
+    /// </summary>
+    /// <param name="timeout"></param>
+    /// <returns></returns>
     public string ValidateReachable(int timeout)
     {
         return _configProvider.ValidateReachable(timeout);
     }
 
+    /// <summary>
+    /// Starts the config store. Store will peridiocally update itself based on its defined source
+    /// </summary>
     public void Start()
     {
 
     }
 
+    /// <summary>
+    /// Bypasses period update and updates immediately.
+    /// </summary>
     public void ForceUpdate()
     {
-       
+
     }
 
     /// <summary>
-    /// Returns null if config is currently valid. Else returns 
+    /// Returns null if config is currently valid. Else returns the last failed config. use this to determine 
+    /// cause for failed config changes.
     /// </summary>
     /// <returns></returns>
     public ConfigStateChange GetCurrentFailingState()
@@ -76,10 +88,10 @@ public class Store<T>
     }
 
     /// <summary>
-    /// Gets currently available configuarion
+    /// Gets currently good configuarion. Returns null if config has never been in a working state.
     /// </summary>
     /// <returns></returns>
-    public ConfigResponse<T> GetConfig()
+    public ConfigResponse<T> GetCurrentGoodConfig()
     {
         string rawConfig = _configProvider.Read();
         T config = _configDeserializer.Invoke(rawConfig);

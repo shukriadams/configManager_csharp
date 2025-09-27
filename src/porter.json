@@ -1,0 +1,7 @@
+{
+    "name" : "ConfigManager",
+    "runtimes" : [ 6 ],
+    "packages" : [
+        "github.shukriadams.Shell_csharp@0.0.1" 
+    ]
+}
