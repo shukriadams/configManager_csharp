@@ -23,7 +23,7 @@ public class Program
         Directory.CreateDirectory(cacheDirectory);
 
         // init the store, this is where the magic happens.
-        Store<MyConfig> store = new Store<MyConfig>(
+        ConfigManager<MyConfig> store = new ConfigManager<MyConfig>(
             configDeserializer: new DeserializeConfig<MyConfig>(Parse),
             configProvider: new GitConfigProvider(),
             cacheLocation: cacheDirectory,
