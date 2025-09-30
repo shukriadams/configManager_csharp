@@ -24,8 +24,11 @@ public class Program
 
         // init the store, this is where the magic happens.
         ConfigManager<MyConfig> store = new ConfigManager<MyConfig>(
-            configDeserializer: new DeserializeConfig<MyConfig>(Parse),
-            configProvider: new GitConfigProvider(),
+            configProvider: new GitConfigProvider
+            {
+                Remote = "<REMOTE FROM ENV FILE HERE>",
+                Branch = "master",
+            },
             cacheLocation: cacheDirectory,
             logError: new LogError(LogError),
             logStatus: new LogStatus(LogStatus),
@@ -48,7 +51,7 @@ public class Program
 
         // start the store, it will run on its own thread and do its thing
         Console.WriteLine("Watching for config changes. Use CTRL-C to exit.");
-        store.Start();
+        store.Start(5000);
 
         // loop forever and check config updates. Changes made to the config available
         // in provider should appear here, including errors and fixes.
@@ -60,9 +63,6 @@ public class Program
                 Console.WriteLine($"Last config change failed: {failingChange.Error}");
             }
 
-            ConfigResponse<MyConfig> response = store.GetConfig();
-            Console.WriteLine($"Current config is at UID {response.Change.UID}, hash {response.Change.Hash}");
-            Console.WriteLine($"Current name is {response.Config.Name}");
             Thread.Sleep(5000);
         }
     }
@@ -79,24 +79,4 @@ public class Program
     {
         Console.WriteLine(status);
     }
-
-    /// <summary>
-    /// Parsing service function
-    /// </summary>
-    /// <param name="rawConfig"></param>
-    /// <returns></returns>
-    private static MyConfig Parse(string rawConfig)
-    {
-        IDeserializer deserializer = YmlHelper.GetDeserializer();
-        try
-        {
-            return deserializer.Deserialize<MyConfig>(rawConfig);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            return null;
-        }
-    }
-
 }    

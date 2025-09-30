@@ -3,8 +3,10 @@
 /// https://github.com/shukriadams/configManager_csharp
 /// MIT License (MIT) Copyright (c) 2025 Shukri Adams   
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+using System.Timers;
+
 namespace ConfigManager
-{ 
+{
     public class ConfigManager<T>
     {
         #region FIELDS
@@ -12,6 +14,21 @@ namespace ConfigManager
         private readonly IConfigProvider _configProvider;
 
         private readonly string _cacheLocation;
+
+        private System.Timers.Timer _timer;
+
+        private int _interval;
+
+        private bool _busy;
+
+        #endregion
+
+        #region PROPERTIES
+
+        /// <summary>
+        /// Optional event hook for config changes
+        /// </summary>
+        public EventHandler OnConfigUpdate;
 
         #endregion
 
@@ -57,9 +74,44 @@ namespace ConfigManager
         /// Starts the config store's internal background thread. Store will peridiocally update itself based on its defined source.
         /// To control the update cycle directly, call ForceUpdate() from your own timer.
         /// </summary>
-        public void Start()
+        public void Start(int interval)
         {
+            if (_timer != null)
+                _timer.Stop();
 
+            _interval = interval;
+
+            _timer = new System.Timers.Timer();
+            _timer.Elapsed += new ElapsedEventHandler(PollUpdate);
+            _timer.Interval = interval;
+            _timer.Enabled = true;
+            _timer.Start();
+        }
+
+        public void Stop()
+        {
+            if (_timer == null)
+                return;
+
+            _timer.Stop();
+            _timer = null;
+        }
+
+        private void PollUpdate(object source, ElapsedEventArgs e)
+        {
+            try
+            {
+                if (_busy)
+                    return;
+
+                _busy = true;
+
+                _configProvider.Update();
+            }
+            finally
+            {
+                _busy = false;
+            }
         }
 
         /// <summary>
@@ -68,6 +120,9 @@ namespace ConfigManager
         public void ForceUpdate()
         {
             _configProvider.Update();
+
+            if (_interval != 0)
+                this.Start(_interval);
         }
 
         /// <summary>
@@ -86,9 +141,8 @@ namespace ConfigManager
         /// <returns></returns>
         public ConfigResponse<T> GetCurrentGoodConfig()
         {
-            string rawConfig = _configProvider.Read();
             ConfigStateChange change = new ConfigStateChange { }; // get from log
-            
+
             return new ConfigResponse<T>
             {
                 Change = change

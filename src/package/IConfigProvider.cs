@@ -2,11 +2,10 @@ namespace ConfigManager
 {
     public interface IConfigProvider
     {
-        string Read();
 
         void Update();
 
-        bool IsValid();
+        string IsValid();
 
         /// <summary>
         /// Call to ensure basic configuration of provider is valid. Returns a null string if config valid, else
