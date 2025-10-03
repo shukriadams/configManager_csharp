@@ -7,7 +7,7 @@ namespace ConfigManager
         /// </summary>
         public string Url { get; set; }
 
-        public bool IsValid()
+        public string IsValid()
         {
             throw new NotImplementedException();
         }

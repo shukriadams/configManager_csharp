@@ -8,7 +8,7 @@ namespace ConfigManager
         /// </summary>
         public string Path { get; set; }
 
-        public bool IsValid()
+        public string IsValid()
         {
             throw new NotImplementedException();
         }
